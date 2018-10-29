@@ -10,7 +10,10 @@ class Dlib {
      */
     external fun helloWorld(): String
 
-    external fun detectFaceRect(image: IntArray, width: Int, height: Int): IntArray
+    external fun detect(image: IntArray, width: Int, height: Int,
+                                rect: IntArray, points: IntArray)
+
+    external fun release()
 
     companion object {
 
