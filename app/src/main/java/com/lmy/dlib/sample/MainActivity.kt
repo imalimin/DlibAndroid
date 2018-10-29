@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val file = File(Environment.getExternalStorageDirectory(), "test.jpg").absolutePath
+        val file = File(Environment.getExternalStorageDirectory(), "vjkgfgj.jpg").absolutePath
         val bitmap = BitmapFactory.decodeFile(file)
         if (null == bitmap || bitmap.isRecycled) {
             sample_text.text = "$file Image is not found"
