@@ -14,11 +14,16 @@ using namespace dlib;
 
 class Dlib {
 public:
+    Dlib();
+
+    ~Dlib();
+
     void detect(int *src, int width, int height, int *rect, int *points);
 
 private:
-    frontal_face_detector detector = get_frontal_face_detector();
+    frontal_face_detector detector;
     shape_predictor model;
+
     array2d<unsigned char> sampling(int *src, int width, int height);
 };
 

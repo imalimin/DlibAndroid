@@ -6,19 +6,6 @@
 
 void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
     array2d<unsigned char> image = sampling(src, width, height);
-    try {
-        deserialize("/sdcard/shape_predictor_68_face_landmarks.dat") >> model;
-    } catch (serialization_error &e) {
-        std::cout << "You need dlib's default face landmarking model file to run this example."
-                  << std::endl;
-        std::cout << "You can get it from the following URL: " << std::endl;
-        std::cout << "   http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2"
-                  << std::endl;
-        std::cout << std::endl << e.what() << std::endl;
-    }
-    catch (std::exception &e) {
-        std::cout << e.what() << std::endl;
-    }
     std::vector<rectangle> dest = detector(image, 1);
     std::vector<full_object_detection> shapes;
     for (unsigned long i = 0; i < dest.size(); ++i)
@@ -49,12 +36,12 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
         dest_width = width / sample;
         dest_height = height / sample;
     }
-    LOGE("sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+    LOGI("sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
     if (sample < 1) {
         sample = 1;
         dest_width = width;
         dest_height = height;
-        LOGE("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+        LOGI("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
     }
     array2d<unsigned char> image;
     image.set_size(dest_height, dest_width);
@@ -72,4 +59,25 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
         }
     }
     return image;
+}
+
+Dlib::Dlib() {
+    detector = get_frontal_face_detector();
+    try {
+        deserialize("/sdcard/shape_predictor_68_face_landmarks.dat") >> model;
+    } catch (serialization_error &e) {
+        LOGE("You need dlib's default face landmarking model file to run this example.");
+        LOGE("You can get it from the following URL: ");
+        LOGE(" http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2");
+        LOGE("%s", e.what());
+    }
+    catch (std::exception &e) {
+        LOGE("%s", e.what());
+    }
+}
+
+Dlib::~Dlib() {
+    LOGI("release");
+//    free(&detector);
+//    free(&model);
 }
