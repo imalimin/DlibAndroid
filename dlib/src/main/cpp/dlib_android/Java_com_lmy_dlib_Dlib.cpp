@@ -27,12 +27,8 @@ Java_com_lmy_dlib_Dlib_detect(
     jint *rectPtr = env->GetIntArrayElements(rect, 0);
     jint *pointsPtr = env->GetIntArrayElements(points, 0);
 
-    std::vector<int> image_datacpp(static_cast<unsigned int>(height * width));
-    for (jsize i = 0; i < len; i++) {
-        image_datacpp[i] = (int) imagePtr[i];
-    }
+    detector->detect(imagePtr, width, height, rectPtr, pointsPtr);
 
-    detector->detect(image_datacpp, width, height, rectPtr, pointsPtr);
     env->ReleaseIntArrayElements(image, imagePtr, NULL);
     env->ReleaseIntArrayElements(rect, rectPtr, NULL);
     env->ReleaseIntArrayElements(points, pointsPtr, NULL);

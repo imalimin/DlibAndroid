@@ -14,11 +14,12 @@ using namespace dlib;
 
 class Dlib {
 public:
-    void detect(const std::vector<int> src, int width, int height, int *rect, int *points);
+    void detect(int *src, int width, int height, int *rect, int *points);
 
 private:
     frontal_face_detector detector = get_frontal_face_detector();
     shape_predictor model;
+    array2d<unsigned char> sampling(int *src, int width, int height);
 };
 
 #endif //DLIBANDROID_DLIB_H

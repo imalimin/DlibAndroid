@@ -1,21 +1,11 @@
 #include "dlib.h"
+#include "log.h"
+#include <math.h>
 
-void Dlib::detect(const std::vector<int> src, int width, int height, int *rect, int *points) {
-    array2d<unsigned char> image;
-    image.set_size(height, width);
+#define MAX_SIZE 500
 
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            int clr = src[i * width + j];
-            int red = (clr & 0x00ff0000) >> 16; // 取高两位
-            int green = (clr & 0x0000ff00) >> 8; // 取中两位
-            int blue = clr & 0x000000ff; // 取低两位
-            unsigned char gray = static_cast<unsigned char>(red * 0.299 + green * 0.587 +
-                                                            blue * 0.114);
-            //rgb_pixel pt(red,green,blue);
-            image[i][j] = gray;
-        }
-    }
+void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
+    array2d<unsigned char> image = sampling(src, width, height);
     try {
         deserialize("/sdcard/shape_predictor_68_face_landmarks.dat") >> model;
     } catch (serialization_error &e) {
@@ -46,4 +36,40 @@ void Dlib::detect(const std::vector<int> src, int width, int height, int *rect, 
             points[i * 2 + 1] = shapes[0].part(i).y();
         }
     }
+}
+
+array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
+    int max = width;
+    int sample = max / MAX_SIZE;
+    int dest_width = width / sample;
+    int dest_height = height / sample;
+    if (height > max) {
+        max = height;
+        sample = max / MAX_SIZE;
+        dest_width = width / sample;
+        dest_height = height / sample;
+    }
+    LOGE("sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+    if (sample < 1) {
+        sample = 1;
+        dest_width = width;
+        dest_height = height;
+        LOGE("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+    }
+    array2d<unsigned char> image;
+    image.set_size(dest_height, dest_width);
+    for (int i = 0; i < dest_height; i++) {
+        for (int j = 0; j < dest_width; j++) {
+            int index = i * sample * dest_width + j * sample;
+            int clr = src[index];
+            int red = (clr & 0x00ff0000) >> 16; // 取高两位
+            int green = (clr & 0x0000ff00) >> 8; // 取中两位
+            int blue = clr & 0x000000ff; // 取低两位
+            unsigned char gray = static_cast<unsigned char>(red * 0.299 + green * 0.587 +
+                                                            blue * 0.114);
+            //rgb_pixel pt(red,green,blue);
+            image[i][j] = gray;
+        }
+    }
+    return image;
 }
