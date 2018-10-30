@@ -32,6 +32,8 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries(dlib-android
                       dlib::dlib
+                      GLESv2
+                      GLESv3
                       ${log-lib} )
 
 SET(CMAKE_BUILE_TYPE "RELEASE")
