@@ -14,6 +14,12 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL
+Java_com_lmy_dlib_Dlib_init(
+        JNIEnv *,
+        jobject,
+        jstring);
+
+JNIEXPORT void JNICALL
 Java_com_lmy_dlib_Dlib_detect(
         JNIEnv *,
         jobject,

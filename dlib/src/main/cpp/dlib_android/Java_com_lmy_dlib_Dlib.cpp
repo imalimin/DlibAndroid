@@ -11,6 +11,18 @@ extern "C" {
 #endif
 
 JNIEXPORT void JNICALL
+Java_com_lmy_dlib_Dlib_init(
+        JNIEnv *env,
+        jobject /* this */,
+        jstring filename) {
+    char *filenamePtr = (char *) env->GetStringUTFChars(filename, NULL);
+    if (!detector) {
+        detector = new Dlib(filenamePtr);
+    }
+    env->ReleaseStringUTFChars(filename, filenamePtr);
+}
+
+JNIEXPORT void JNICALL
 Java_com_lmy_dlib_Dlib_detect(
         JNIEnv *env,
         jobject /* this */,
@@ -21,9 +33,6 @@ Java_com_lmy_dlib_Dlib_detect(
         jintArray points) {
     clock_t t0, t1;
     t0 = clock();
-    if (!detector) {
-        detector = new Dlib();
-    }
     t1 = clock();
     LOGI("Init cost %f", (t1 - t0) / (double) CLOCKS_PER_SEC);
     jint *imagePtr = env->GetIntArrayElements(image, 0);

@@ -11,16 +11,18 @@ void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
     array2d<unsigned char> image = sampling(src, width, height, sample);
     t1 = clock();
     LOGI("Sample cost %f", (t1 - t0) / (double) CLOCKS_PER_SEC);
-    std::vector<rectangle> dest = detector(image, 1);
+    std::vector<rectangle> faceRect = detector(image, 1);
+    t0 = clock();
+    LOGI("Face rect cost %f", (t0 - t1) / (double) CLOCKS_PER_SEC);
     std::vector<full_object_detection> shapes;
-    for (unsigned long i = 0; i < dest.size(); ++i)
-        shapes.push_back(model(image, dest[i]));
+    for (unsigned long i = 0; i < faceRect.size(); ++i)
+        shapes.push_back(model(image, faceRect[i]));
 
-    if (!dest.empty()) {
-        rect[0] = dest[0].left() * sample[0];
-        rect[1] = dest[0].top() * sample[0];
-        rect[2] = dest[0].right() * sample[0];
-        rect[3] = dest[0].bottom() * sample[0];
+    if (!faceRect.empty()) {
+        rect[0] = faceRect[0].left() * sample[0];
+        rect[1] = faceRect[0].top() * sample[0];
+        rect[2] = faceRect[0].right() * sample[0];
+        rect[3] = faceRect[0].bottom() * sample[0];
     }
     if (!shapes.empty()) {
         for (int i = 0; i < 68; i++) {
@@ -66,11 +68,11 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height, int *samp
     return image;
 }
 
-Dlib::Dlib() {
+Dlib::Dlib(std::string filename) {
     sample = static_cast<int *>(malloc(sizeof(int)));
     detector = get_frontal_face_detector();
     try {
-        deserialize("/sdcard/shape_predictor_68_face_landmarks.dat") >> model;
+        deserialize(filename) >> model;
     } catch (serialization_error &e) {
         LOGE("You need dlib's default face landmarking model file to run this example.");
         LOGE("You can get it from the following URL: ");

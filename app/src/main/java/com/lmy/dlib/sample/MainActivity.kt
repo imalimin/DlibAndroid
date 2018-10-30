@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         val height = bitmap.height
         val pixels = IntArray(width * height)
         bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+        dlib.init(File(Environment.getExternalStorageDirectory(),
+                "shape_predictor_68_face_landmarks.dat").absolutePath)
         dlib.detect(pixels, width, height, rect, points)
         showResult(bitmap)
         sample_text.text = "(${rect[0]},${rect[1]})-(${rect[2]},${rect[3]})"

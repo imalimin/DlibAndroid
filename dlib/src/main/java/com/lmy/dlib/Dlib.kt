@@ -4,14 +4,10 @@ package com.lmy.dlib
  * Created by lmyooyo@gmail.com on 2018/10/29.
  */
 class Dlib {
-    /**
-     * A native method that is implemented by the 'native-lib' native library,
-     * which is packaged with this application.
-     */
-    external fun helloWorld(): String
+    external fun init(filename: String)
 
     external fun detect(image: IntArray, width: Int, height: Int,
-                                rect: IntArray, points: IntArray)
+                        rect: IntArray, points: IntArray)
 
     external fun release()
 

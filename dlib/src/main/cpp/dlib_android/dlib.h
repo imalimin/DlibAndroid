@@ -14,7 +14,7 @@ using namespace dlib;
 
 class Dlib {
 public:
-    Dlib();
+    Dlib(std::string filename);
 
     ~Dlib();
 
