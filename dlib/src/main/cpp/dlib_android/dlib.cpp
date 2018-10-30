@@ -4,6 +4,27 @@
 
 #define MAX_SIZE 240
 
+static bool checkTextureBuffer(char *buffer, int srcSize, int destSize) {
+    if (srcSize != destSize) {
+        if (buffer) {
+            free(buffer);
+            buffer = static_cast<char *>(malloc(sizeof(char) * destSize));
+        }
+        return true;
+    }
+    return false;
+}
+
+void Dlib::detectTexture(int *texture, int width, int height, int *rect, int *points) {
+    int size = width * height * 4;
+    if (checkTextureBuffer(textureBuffer, textureBufferSize, size)) {
+        textureBufferSize = size;
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(texture[0]));
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, textureBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);
+}
+
 void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
     sample[0] = 1;
     clock_t t0, t1;
@@ -88,6 +109,12 @@ Dlib::~Dlib() {
     LOGI("release");
     if (sample) {
         free(sample);
+        sample = NULL;
+    }
+    textureBufferSize = 0;
+    if (textureBuffer) {
+        free(textureBuffer);
+        textureBuffer = NULL;
     }
 //    free(&detector);
 //    free(&model);

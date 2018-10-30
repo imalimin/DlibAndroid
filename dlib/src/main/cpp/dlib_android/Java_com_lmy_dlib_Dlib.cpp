@@ -23,6 +23,24 @@ Java_com_lmy_dlib_Dlib_init(
 }
 
 JNIEXPORT void JNICALL
+Java_com_lmy_dlib_Dlib_detectTexture(
+        JNIEnv *env,
+        jobject /* this */,
+        jintArray texture,
+        jint width,
+        jint height,
+        jintArray rect,
+        jintArray points) {
+    jint *texturePtr = env->GetIntArrayElements(texture, 0);
+    jint *rectPtr = env->GetIntArrayElements(rect, 0);
+    jint *pointsPtr = env->GetIntArrayElements(points, 0);
+
+    env->ReleaseIntArrayElements(texture, texturePtr, NULL);
+    env->ReleaseIntArrayElements(rect, rectPtr, NULL);
+    env->ReleaseIntArrayElements(points, pointsPtr, NULL);
+}
+
+JNIEXPORT void JNICALL
 Java_com_lmy_dlib_Dlib_detect(
         JNIEnv *env,
         jobject /* this */,

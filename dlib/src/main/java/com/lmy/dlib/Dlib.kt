@@ -9,6 +9,9 @@ class Dlib {
     external fun detect(image: IntArray, width: Int, height: Int,
                         rect: IntArray, points: IntArray)
 
+    external fun detectTexture(texture: IntArray, width: Int, height: Int,
+                               rect: IntArray, points: IntArray)
+
     external fun release()
 
     companion object {
