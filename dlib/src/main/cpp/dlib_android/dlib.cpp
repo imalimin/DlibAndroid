@@ -115,12 +115,12 @@ int *Dlib::calculateSample(int width, int height, int *sample) {
         dest_width = width / sample[0];
         dest_height = height / sample[0];
     }
-    LOGI("sample=%d, %dx%d -> %dx%d", sample[0], width, height, dest_width, dest_height);
+//    LOGI("sample=%d, %dx%d -> %dx%d", sample[0], width, height, dest_width, dest_height);
     if (sample[0] < 1) {
         sample[0] = 1;
         dest_width = width;
         dest_height = height;
-        LOGI("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+//        LOGI("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
     }
     int *result = new int[2];
     result[0] = dest_width;
