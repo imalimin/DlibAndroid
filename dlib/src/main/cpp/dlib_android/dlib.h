@@ -19,7 +19,7 @@ public:
 
     ~Dlib();
 
-    void detect(int *src, int width, int height, int *rect, int *points);
+    void detectIntArray(int *src, int width, int height, int *rect, int *points);
 
     void detectTexture(int *texture, int width, int height, int *rect, int *points);
 
@@ -30,7 +30,14 @@ private:
     int textureBufferSize = 0;
     char *textureBuffer = NULL;
 
+    void
+    detect(array2d<unsigned char> image, int sample, int *rect, int *points);
+
     array2d<unsigned char> sampling(int *src, int width, int height, int *sample);
+
+    array2d<unsigned char> samplingTexture(char *buffer, int width, int height, int *sample);
+
+    int *calculateSample(int width, int height, int *sample);
 };
 
 #endif //DLIBANDROID_DLIB_H

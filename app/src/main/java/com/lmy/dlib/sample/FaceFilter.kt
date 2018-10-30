@@ -33,7 +33,9 @@ class FaceFilter(width: Int = 0,
     }
 
     override fun draw(transformMatrix: FloatArray?) {
-
+        if (inited) {
+            dlib.detectTexture(textureId, width, height, faceRect, points)
+        }
     }
 
     override fun getRect(): RectF = rect

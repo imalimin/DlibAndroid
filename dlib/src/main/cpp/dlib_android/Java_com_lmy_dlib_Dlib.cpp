@@ -35,6 +35,8 @@ Java_com_lmy_dlib_Dlib_detectTexture(
     jint *rectPtr = env->GetIntArrayElements(rect, 0);
     jint *pointsPtr = env->GetIntArrayElements(points, 0);
 
+    detector->detectTexture(texturePtr, width, height, rectPtr, pointsPtr);
+
     env->ReleaseIntArrayElements(texture, texturePtr, NULL);
     env->ReleaseIntArrayElements(rect, rectPtr, NULL);
     env->ReleaseIntArrayElements(points, pointsPtr, NULL);
@@ -57,7 +59,7 @@ Java_com_lmy_dlib_Dlib_detect(
     jint *rectPtr = env->GetIntArrayElements(rect, 0);
     jint *pointsPtr = env->GetIntArrayElements(points, 0);
 
-    detector->detect(imagePtr, width, height, rectPtr, pointsPtr);
+    detector->detectIntArray(imagePtr, width, height, rectPtr, pointsPtr);
 
     env->ReleaseIntArrayElements(image, imagePtr, NULL);
     env->ReleaseIntArrayElements(rect, rectPtr, NULL);
