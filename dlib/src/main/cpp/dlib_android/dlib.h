@@ -23,8 +23,9 @@ public:
 private:
     frontal_face_detector detector;
     shape_predictor model;
+    int *sample = NULL;
 
-    array2d<unsigned char> sampling(int *src, int width, int height);
+    array2d<unsigned char> sampling(int *src, int width, int height, int *sample);
 };
 
 #endif //DLIBANDROID_DLIB_H

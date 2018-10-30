@@ -2,43 +2,44 @@
 #include "log.h"
 #include <math.h>
 
-#define MAX_SIZE 500
+#define MAX_SIZE 240
 
 void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
-    array2d<unsigned char> image = sampling(src, width, height);
+    sample[0] = 1;
+    array2d<unsigned char> image = sampling(src, width, height, sample);
     std::vector<rectangle> dest = detector(image, 1);
     std::vector<full_object_detection> shapes;
     for (unsigned long i = 0; i < dest.size(); ++i)
         shapes.push_back(model(image, dest[i]));
 
     if (!dest.empty()) {
-        rect[0] = dest[0].left();
-        rect[1] = dest[0].top();
-        rect[2] = dest[0].right();
-        rect[3] = dest[0].bottom();
+        rect[0] = dest[0].left() * sample[0];
+        rect[1] = dest[0].top() * sample[0];
+        rect[2] = dest[0].right() * sample[0];
+        rect[3] = dest[0].bottom() * sample[0];
     }
     if (!shapes.empty()) {
         for (int i = 0; i < 68; i++) {
-            points[i * 2] = shapes[0].part(i).x();
-            points[i * 2 + 1] = shapes[0].part(i).y();
+            points[i * 2] = shapes[0].part(i).x() * sample[0];
+            points[i * 2 + 1] = shapes[0].part(i).y() * sample[0];
         }
     }
 }
 
-array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
+array2d<unsigned char> Dlib::sampling(int *src, int width, int height, int *sample) {
     int max = width;
-    int sample = max / MAX_SIZE;
-    int dest_width = width / sample;
-    int dest_height = height / sample;
+    sample[0] = max / MAX_SIZE;
+    int dest_width = width / sample[0];
+    int dest_height = height / sample[0];
     if (height > max) {
         max = height;
-        sample = max / MAX_SIZE;
-        dest_width = width / sample;
-        dest_height = height / sample;
+        sample[0] = max / MAX_SIZE;
+        dest_width = width / sample[0];
+        dest_height = height / sample[0];
     }
     LOGI("sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
-    if (sample < 1) {
-        sample = 1;
+    if (sample[0] < 1) {
+        sample[0] = 1;
         dest_width = width;
         dest_height = height;
         LOGI("correct sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
@@ -47,7 +48,7 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
     image.set_size(dest_height, dest_width);
     for (int i = 0; i < dest_height; i++) {
         for (int j = 0; j < dest_width; j++) {
-            int index = i * sample * dest_width + j * sample;
+            int index = i * sample[0] * width + j * sample[0];
             int clr = src[index];
             int red = (clr & 0x00ff0000) >> 16; // 取高两位
             int green = (clr & 0x0000ff00) >> 8; // 取中两位
@@ -62,6 +63,7 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height) {
 }
 
 Dlib::Dlib() {
+    sample = static_cast<int *>(malloc(sizeof(int)));
     detector = get_frontal_face_detector();
     try {
         deserialize("/sdcard/shape_predictor_68_face_landmarks.dat") >> model;
@@ -78,6 +80,9 @@ Dlib::Dlib() {
 
 Dlib::~Dlib() {
     LOGI("release");
+    if (sample) {
+        free(sample);
+    }
 //    free(&detector);
 //    free(&model);
 }
