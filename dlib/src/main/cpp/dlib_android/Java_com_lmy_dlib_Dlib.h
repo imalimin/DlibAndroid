@@ -3,6 +3,7 @@
 //
 #include <jni.h>
 #include <vector>
+#include "log.h"
 
 #ifndef DLIBANDROID_JAVA_COM_LMY_DLIB_DLIB_H
 #define DLIBANDROID_JAVA_COM_LMY_DLIB_DLIB_H

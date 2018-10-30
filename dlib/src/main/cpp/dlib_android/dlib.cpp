@@ -6,7 +6,11 @@
 
 void Dlib::detect(int *src, int width, int height, int *rect, int *points) {
     sample[0] = 1;
+    clock_t t0, t1;
+    t0 = clock();
     array2d<unsigned char> image = sampling(src, width, height, sample);
+    t1 = clock();
+    LOGI("Sample cost %f", (t1 - t0) / (double) CLOCKS_PER_SEC);
     std::vector<rectangle> dest = detector(image, 1);
     std::vector<full_object_detection> shapes;
     for (unsigned long i = 0; i < dest.size(); ++i)
@@ -37,7 +41,7 @@ array2d<unsigned char> Dlib::sampling(int *src, int width, int height, int *samp
         dest_width = width / sample[0];
         dest_height = height / sample[0];
     }
-    LOGI("sample=%d, %dx%d -> %dx%d", sample, width, height, dest_width, dest_height);
+    LOGI("sample=%d, %dx%d -> %dx%d", sample[0], width, height, dest_width, dest_height);
     if (sample[0] < 1) {
         sample[0] = 1;
         dest_width = width;

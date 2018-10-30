@@ -19,10 +19,13 @@ Java_com_lmy_dlib_Dlib_detect(
         jint height,
         jintArray rect,
         jintArray points) {
+    clock_t t0, t1;
+    t0 = clock();
     if (!detector) {
         detector = new Dlib();
     }
-    jsize len = env->GetArrayLength(image);
+    t1 = clock();
+    LOGI("Init cost %f", (t1 - t0) / (double) CLOCKS_PER_SEC);
     jint *imagePtr = env->GetIntArrayElements(image, 0);
     jint *rectPtr = env->GetIntArrayElements(rect, 0);
     jint *pointsPtr = env->GetIntArrayElements(points, 0);
@@ -32,6 +35,8 @@ Java_com_lmy_dlib_Dlib_detect(
     env->ReleaseIntArrayElements(image, imagePtr, NULL);
     env->ReleaseIntArrayElements(rect, rectPtr, NULL);
     env->ReleaseIntArrayElements(points, pointsPtr, NULL);
+    t0 = clock();
+    LOGI("Detect cost %f", (t0 - t1) / (double) CLOCKS_PER_SEC);
 }
 
 JNIEXPORT void JNICALL
