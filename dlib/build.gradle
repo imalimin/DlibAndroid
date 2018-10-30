@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 27
     defaultConfig {
-        minSdkVersion 18
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -17,7 +17,11 @@ android {
                         '-DANDROID_STL=c++_shared',
                         '-DCMAKE_ANDROID_ARM_NEON=ON',
                         '-DCMAKE_BUILD_TYPE=Release ..'
-                cppFlags "-std=c++11 -O3 -DDLIB_NO_GUI_SUPPORT=1"
+                cppFlags "-std=c++11 -O3 " +
+                        "-DDLIB_NO_GUI_SUPPORT=1 " +
+                        "-DDLIB_PNG_SUPPORT=0 " +
+                        "-DDLIB_JPEG_SUPPORT=0 " +
+                        "-DDLIB_PNG_STATIC=0 "
             }
         }
         ndk {
