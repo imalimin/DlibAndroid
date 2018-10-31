@@ -17,11 +17,11 @@ android {
                         '-DANDROID_STL=c++_shared',
                         '-DCMAKE_ANDROID_ARM_NEON=ON',
                         '-DCMAKE_BUILD_TYPE=Release ..'
-                cppFlags "-std=c++11 -O3 " +
-                        "-DDLIB_NO_GUI_SUPPORT=1 " +
-                        "-DDLIB_PNG_SUPPORT=0 " +
-                        "-DDLIB_JPEG_SUPPORT=0 " +
-                        "-DDLIB_PNG_STATIC=0 "
+                cppFlags '-std=c++11 -O3 ' +
+                        '-DDLIB_NO_GUI_SUPPORT '
+//                        '-DDNDEBUG ' +
+//                        "-DDLIB_USE_BLAS " +
+//                        "-DDLIB_USE_LAPACK "
             }
         }
         ndk {
