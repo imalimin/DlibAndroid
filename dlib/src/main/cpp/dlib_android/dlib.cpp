@@ -25,6 +25,8 @@ void Dlib::detectTexture(int *texture, int width, int height, int *rect, int *po
     glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(texture[0]));
     glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, textureBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE);
+    t1 = clock();
+    LOGI("Read cost %f", (t1 - t0) / (double) CLOCKS_PER_SEC);
     samplingTexture(textureBuffer, width, height, sample, frame);
     detect(frame, rect);
     findFeature(frame, rect, points);
