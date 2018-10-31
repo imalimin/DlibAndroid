@@ -94,6 +94,9 @@ class FaceFilter(private val imageView: ImageView,
     override fun getRect(): RectF = rect
     override fun release() {
         super.release()
+        if (null != bitmap && !bitmap!!.isRecycled) {
+            bitmap?.recycle()
+        }
         dlib.release()
         initTask?.cancel(true)
     }
