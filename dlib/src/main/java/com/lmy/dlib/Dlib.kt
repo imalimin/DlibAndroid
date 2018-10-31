@@ -6,6 +6,15 @@ package com.lmy.dlib
 class Dlib {
     external fun init(filename: String)
 
+    /**
+     * For test
+     */
+    external fun samplingTexture(texture: IntArray, width: Int, height: Int,
+                                 dest: IntArray, dw: IntArray, dh: IntArray)
+
+    external fun trackTexture(texture: IntArray, width: Int, height: Int,
+                               rect: IntArray, points: IntArray)
+
     external fun detect(image: IntArray, width: Int, height: Int,
                         rect: IntArray, points: IntArray)
 

@@ -40,6 +40,27 @@ Java_com_lmy_dlib_Dlib_detectTexture(
         jintArray);
 
 JNIEXPORT void JNICALL
+Java_com_lmy_dlib_Dlib_trackTexture(
+        JNIEnv *,
+        jobject,
+        jintArray,
+        jint,
+        jint,
+        jintArray,
+        jintArray);
+
+JNIEXPORT void JNICALL
+Java_com_lmy_dlib_Dlib_samplingTexture(
+        JNIEnv *,
+        jobject,
+        jintArray,
+        jint,
+        jint,
+        jintArray,
+        jintArray,
+        jintArray);
+
+JNIEXPORT void JNICALL
 Java_com_lmy_dlib_Dlib_release(
         JNIEnv *,
         jobject);

@@ -23,21 +23,33 @@ public:
 
     void detectTexture(int *texture, int width, int height, int *rect, int *points);
 
+    void trackTexture(int *texture, int width, int height, int *rect, int *points);
+
 private:
     frontal_face_detector detector;
-    shape_predictor model;
+    shape_predictor featureModel;
+    correlation_tracker tracker;
+    array2d<unsigned char> *frame = new array2d<unsigned char>();
     int *sample = NULL;
     int textureBufferSize = 0;
     char *textureBuffer = NULL;
+    int *faceTrackRect = NULL;
 
-    void
-    detect(array2d<unsigned char> image, int sample, int *rect, int *points);
+    void detect(array2d<unsigned char> *image, int *rect);
 
-    array2d<unsigned char> sampling(int *src, int width, int height, int *sample);
+    void findFeature(array2d<unsigned char> *image, int *rect, int *points);
 
-    array2d<unsigned char> samplingTexture(char *buffer, int width, int height, int *sample);
+    void sampling(int *src, int width, int height, int *sample,
+                  array2d<unsigned char> *dest);
+
+    void samplingTexture(char *buffer, int width, int height, int *sample,
+                         array2d<unsigned char> *dest);
 
     int *calculateSample(int width, int height, int *sample);
+
+    void reduction(int *rect, int *points, int sample);
+
+    bool found();
 };
 
 #endif //DLIBANDROID_DLIB_H
