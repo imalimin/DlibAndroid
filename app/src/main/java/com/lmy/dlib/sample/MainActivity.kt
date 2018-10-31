@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val mTextureView = TextureView(this)
+        mTextureView.keepScreenOn = true
         container.addView(mTextureView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT))
         mRecorder = VideoRecorderImpl(this).apply {
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getDefaultFilter(): BaseFilter = GroupFilter.create(BeautyV4Filter())
-            .addSticker(FaceFilter())
+            .addSticker(FaceFilter(imageView))
 
     override fun onDestroy() {
         super.onDestroy()
