@@ -7,6 +7,7 @@ import android.widget.ImageView
 import com.lmy.codec.texture.impl.sticker.BaseSticker
 import com.lmy.dlib.Dlib
 import java.io.File
+import java.io.FileOutputStream
 
 /**
  * Created by lmyooyo@gmail.com on 2018/10/30.
@@ -76,20 +77,29 @@ class FaceFilter(private val imageView: ImageView,
         }
     }
 
-//    private fun show() {
-//        if (count != 60) return
-//        imageView.post({
-//            Log.i("FaceFilter", "show(${buffer!![0]},${buffer!![1]},${buffer!![2]},${buffer!![3]})")
-//            for (i in 0 until buffer!!.size) {
-//                buffer!![i] = Color.rgb(buffer!![i], buffer!![i], buffer!![i])
-//            }
-//            bitmap.setPixels(buffer, 0, 144, 0, 0, 144, 256)
-//            val fos = FileOutputStream(File(Environment.getExternalStorageDirectory(), "gray.jpg"))
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos)
-//            fos.close()
-////            imageView.setImageBitmap(bitmap)
-//        })
-//    }
+    private var count = 0
+    private fun shoot() {
+        ++count
+        if (count != 10) return
+        val buffer = ByteArray(width * height * 4)
+        dlib.samplingTexture(textureId, width, height, buffer, IntArray(1), IntArray(1))
+
+        val pixels = IntArray(width * height)
+        for (i in 0 until height) {
+            for (j in 0 until width) {
+                val index = i * width * 4 + j * 4
+                pixels[i * width + j] = Color.argb(buffer[index + 3].toInt(), buffer[index].toInt(),
+                        buffer[index + 1].toInt(), buffer[index + 2].toInt())
+            }
+        }
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height)
+        val fos = FileOutputStream(File(Environment.getExternalStorageDirectory(), "gray.jpg"))
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos)
+        fos.close()
+        bitmap.recycle()
+    }
 
     override fun getRect(): RectF = rect
     override fun release() {
@@ -105,10 +115,6 @@ class FaceFilter(private val imageView: ImageView,
         override fun doInBackground(vararg params: Void?): Void? {
             filter.initDlib()
             return null
-        }
-
-        override fun onPostExecute(result: Void?) {
-            super.onPostExecute(result)
         }
     }
 }

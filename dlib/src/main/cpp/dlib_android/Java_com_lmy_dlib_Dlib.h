@@ -56,7 +56,7 @@ Java_com_lmy_dlib_Dlib_samplingTexture(
         jintArray,
         jint,
         jint,
-        jintArray,
+        jbyteArray,
         jintArray,
         jintArray);
 

@@ -10,7 +10,7 @@ class Dlib {
      * For test
      */
     external fun samplingTexture(texture: IntArray, width: Int, height: Int,
-                                 dest: IntArray, dw: IntArray, dh: IntArray)
+                                 dest: ByteArray, dw: IntArray, dh: IntArray)
 
     external fun trackTexture(texture: IntArray, width: Int, height: Int,
                                rect: IntArray, points: IntArray)
